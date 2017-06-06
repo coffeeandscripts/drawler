@@ -43,8 +43,10 @@ class Screen {
     int width;
     int userScreen;
     /* 1 - Home
-     * 2 - Game
-     * 3 - Menu
+     * 2 - Characters
+     * 3 - Game
+     * 4 - Menu
+     * 5 - Load
      */
     WINDOW * mainWindow;
     WindowData * mainWindowData;
