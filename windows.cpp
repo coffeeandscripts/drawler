@@ -58,15 +58,15 @@ WINDOW * openGameWindow(Screen * scr) {
 // opens game 
 
 
-// draws everythong on main start window
+// draws everything on main start window
 void drawMainWindow(Screen * scr) {   
     WINDOW * win = scr->windows[1];
     if (scr->windowDatas[1]->returnCurrentRow() == 1) {
         wattron(win, A_STANDOUT);
-        mvwprintw(win, 0, 0, "Start");
+        mvwprintw(win, 0, 0, "Start New Game");
         wattroff(win, A_STANDOUT);
     } else {
-        mvwprintw(win, 0, 0, "Start");
+        mvwprintw(win, 0, 0, "Start New Game");
     }
     if (scr->windowDatas[1]->returnCurrentRow() == 2) {
         wattron(win, A_STANDOUT);
@@ -81,6 +81,36 @@ void drawMainWindow(Screen * scr) {
         wattroff(win, A_STANDOUT);
     } else {
         mvwprintw(win, 2, 0, "Quit");
+    }
+}
+
+void drawSetupWindow(Screen * scr) {
+    WINDOW * win = scr->windows[2];
+    int currentRow = scr->windowDatas[2]->returnCurrentRow();
+    int currentColumn = scr->windowDatas[2]->returnCurrentColumn();
+    if (currentColumn == 1) {
+        if (currentRow == 1) {
+
+        } else {
+
+        }
+        if (currentRow == 2) {
+
+        } else {
+
+        }
+        if (currentRow == 3) {
+
+        } else {
+
+        }
+        if (currentRow == 4) {
+
+        } else {
+
+        }
+    } else if (currentColumn == 2) {
+
     }
 }
 

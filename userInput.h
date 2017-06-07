@@ -9,6 +9,6 @@
 
 
 // FUNCTIONS
-void lastKeyUpdate(Screen * scr, int ch);
+void lastKeyUpdate(Screen * scr, int ch, Party * currentParty);
 
 #endif

@@ -8,9 +8,12 @@
 #include <iostream>
 
 #include "windows.h"
+#include "character.h"
 #include "userInput.h"
 
 // CLASSES
+class Party;
+class Screen;
 
 // FUNCTIONS
 
@@ -28,6 +31,7 @@ void startCurses() {
 int main() {
     int ch;
     Screen scr;
+    Party * currentParty;
     scr.escapeCall = 0;
 
     startCurses();
@@ -43,7 +47,7 @@ int main() {
 
     while (scr.escapeCall != 1 and ch != 'q') {
         ch = getch();
-        lastKeyUpdate(&scr, ch);
+        lastKeyUpdate(&scr, ch, currentParty);
         if (scr.userScreen == 0) {
             scr.userScreen = 1;
         }

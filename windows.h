@@ -18,6 +18,9 @@ class WindowData {
         int returnCurrentRow() {
             return currentRow;
         }
+        int returnCurrentColumn() {
+            return currentColumn;
+        }
         void incrementRow() {
             if (currentRow < rows) {
                 currentRow += 1;

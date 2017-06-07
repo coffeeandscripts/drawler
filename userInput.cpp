@@ -4,12 +4,18 @@
 
 #include <ncurses.h>
 #include <iostream>
+
 #include "windows.h"
+#include "character.h"
 #include "userInput.h"
+
+// CLASSES
+class Screen;
+class Party;
 
 // FUNCTIONS
 // updates scr data using the latest keystroke
-void lastKeyUpdate(Screen * scr, int ch) {
+void lastKeyUpdate(Screen * scr, int ch, Party * currentParty) {
     switch(ch) {
         case '1':
             if (scr->userScreen != 1) {
@@ -27,7 +33,8 @@ void lastKeyUpdate(Screen * scr, int ch) {
             switch (scr->userScreen) {
                 case 1:
                     switch (scr->windowDatas[1]->returnCurrentRow()) {
-                        case 1:
+                        case 1:  // start new game - goes into party/character creation
+                            currentParty = partyCreation(scr);
                             break;
                         case 2:
                             break;
