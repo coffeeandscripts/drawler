@@ -28,7 +28,12 @@ class WindowData {
                 currentRow -= 1;
             }
         }
-        WindowData();
+        WindowData() {
+            rows = 0;
+            columns = 0;
+            currentRow = 0;
+            currentColumn = 0;       
+        }
     protected:
     int rows;
     int columns;
@@ -43,16 +48,13 @@ class Screen {
     int width;
     int userScreen;
     /* 1 - Home
-     * 2 - Characters
+     * 2 - Setup
      * 3 - Game
      * 4 - Menu
      * 5 - Load
      */
-    WINDOW * mainWindow;
-    WindowData * mainWindowData;
-    WINDOW * gameWindow;
-    WindowData * gameWindowData;
-    WINDOW * splashWindow;
+    WINDOW * windows[5];
+    WindowData * windowDatas[5];
     int lastKey;
 };
 
@@ -61,6 +63,7 @@ class Screen {
 // gets the screen size
 void getScreenSize(Screen * scr);
 WINDOW * openMainWindow(Screen * scr);
+WINDOW * openSetupWindow(Screen * scr);
 WINDOW * openGameWindow(Screen * scr);
 WINDOW * openSplashWindow(Screen * scr);
 void drawMainWindow(Screen * scr);

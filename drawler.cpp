@@ -33,14 +33,15 @@ int main() {
     startCurses();
     getScreenSize(&scr);
 
-    scr.splashWindow = openSplashWindow(&scr);
-    scr.mainWindow = openMainWindow(&scr);
-    scr.gameWindow = openGameWindow(&scr);
+    scr.windows[0] = openSplashWindow(&scr);
+    scr.windows[1] = openMainWindow(&scr);
+    scr.windows[2] = openSetupWindow(&scr);
+    scr.windows[3] = openGameWindow(&scr);
     scr.userScreen = 0;
     refresh();
     updateScreen(&scr);
 
-    while (scr.escapeCall != 1) {
+    while (scr.escapeCall != 1 and ch != 'q') {
         ch = getch();
         lastKeyUpdate(&scr, ch);
         if (scr.userScreen == 0) {
@@ -51,7 +52,7 @@ int main() {
     endwin();
     
     std::cout << scr.height << std::endl;
-    std::cout << scr.mainWindowData->returnCurrentRow() << std::endl;
+    std::cout << scr.windowDatas[0]->returnCurrentRow() << std::endl;
     std::cout << scr.lastKey << std::endl;
 
     return 0;

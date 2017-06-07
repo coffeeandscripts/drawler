@@ -21,6 +21,19 @@ WINDOW * openSplashWindow(Screen * scr) {
     WINDOW * win = newwin(scr->height, scr->width, 0, 0);
     wprintw(win, "Drawler");
     mvwprintw(win, 1, 0, "Press any button");
+    static WindowData winData;
+    winData.setValues(0,0,0,0);
+    scr->windowDatas[0] = &winData;
+    return win;
+}
+
+// opens the setup window
+WINDOW * openSetupWindow(Screen * scr) {
+    clear();
+    WINDOW * win = newwin(scr->height, scr->width, 0, 0);
+    static WindowData winData;
+    winData.setValues(6,0,1,0);
+    scr->windowDatas[2] = &winData;
     return win;
 }
 
@@ -28,7 +41,9 @@ WINDOW * openSplashWindow(Screen * scr) {
 WINDOW * openMainWindow(Screen * scr) {
     clear();
     WINDOW * win = newwin(scr->height, scr->width, 0, 0);
-    scr->mainWindowData->setValues(3,0,1,0);
+    static WindowData winData;
+    winData.setValues(3,0,1,0);
+    scr->windowDatas[1] = &winData;
     return win;
 }
 
@@ -45,26 +60,27 @@ WINDOW * openGameWindow(Screen * scr) {
 
 // draws everythong on main start window
 void drawMainWindow(Screen * scr) {   
-    if (scr->mainWindowData->returnCurrentRow() == 1) {
-        wattron(scr->mainWindow, A_STANDOUT);
-        mvwprintw(scr->mainWindow, 0, 0, "Start");
-        wattroff(scr->mainWindow, A_STANDOUT);
+    WINDOW * win = scr->windows[1];
+    if (scr->windowDatas[1]->returnCurrentRow() == 1) {
+        wattron(win, A_STANDOUT);
+        mvwprintw(win, 0, 0, "Start");
+        wattroff(win, A_STANDOUT);
     } else {
-        mvwprintw(scr->mainWindow, 0, 0, "Start");
+        mvwprintw(win, 0, 0, "Start");
     }
-    if (scr->mainWindowData->returnCurrentRow() == 2) {
-        wattron(scr->mainWindow, A_STANDOUT);
-        mvwprintw(scr->mainWindow, 1, 0, "Load");
-        wattroff(scr->mainWindow, A_STANDOUT);
+    if (scr->windowDatas[1]->returnCurrentRow() == 2) {
+        wattron(win, A_STANDOUT);
+        mvwprintw(win, 1, 0, "Load");
+        wattroff(win, A_STANDOUT);
     } else {
-        mvwprintw(scr->mainWindow, 1, 0, "Load");
+        mvwprintw(win, 1, 0, "Load");
     }
-    if (scr->mainWindowData->returnCurrentRow() == 3) {
-        wattron(scr->mainWindow, A_STANDOUT);
-        mvwprintw(scr->mainWindow, 2, 0, "Quit");
-        wattroff(scr->mainWindow, A_STANDOUT);
+    if (scr->windowDatas[1]->returnCurrentRow() == 3) {
+        wattron(win, A_STANDOUT);
+        mvwprintw(win, 2, 0, "Quit");
+        wattroff(win, A_STANDOUT);
     } else {
-        mvwprintw(scr->mainWindow, 2, 0, "Quit");
+        mvwprintw(win, 2, 0, "Quit");
     }
 }
 
@@ -74,17 +90,20 @@ void updateScreen(Screen * scr) {
     refresh();
     switch(scr->userScreen) {
         case 0:
-            wrefresh(scr->splashWindow);
-            redrawwin(scr->splashWindow);
+            wrefresh(scr->windows[0]);
+            redrawwin(scr->windows[0]);
             break;
         case 1:
             drawMainWindow(scr);
-            wrefresh(scr->mainWindow);
-            redrawwin(scr->mainWindow);
+            wrefresh(scr->windows[1]);
+            redrawwin(scr->windows[1]);
             break;
         case 2:
-            wrefresh(scr->gameWindow);
-            redrawwin(scr->gameWindow);
+            wrefresh(scr->windows[2]);
+            redrawwin(scr->windows[2]);
+        case 3:
+            wrefresh(scr->windows[3]);
+            redrawwin(scr->windows[3]);
             break;
     }
 }

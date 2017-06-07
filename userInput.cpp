@@ -26,7 +26,7 @@ void lastKeyUpdate(Screen * scr, int ch) {
         case 10: // enter
             switch (scr->userScreen) {
                 case 1:
-                    switch (scr->mainWindowData->returnCurrentRow()) {
+                    switch (scr->windowDatas[1]->returnCurrentRow()) {
                         case 1:
                             break;
                         case 2:
@@ -44,7 +44,7 @@ void lastKeyUpdate(Screen * scr, int ch) {
             switch (scr->userScreen) {
                 case 1:
                     // increases the row data value for the rows on the main menu
-                    scr->mainWindowData->incrementRow();                    
+                    scr->windowDatas[1]->incrementRow();                    
                     break;
                 case 2:
                     break;
@@ -54,7 +54,7 @@ void lastKeyUpdate(Screen * scr, int ch) {
             switch (scr->userScreen) {
                 case 1:
                     // decreases the row data value for the rows on the main menu
-                    scr->mainWindowData->decrementRow();
+                    scr->windowDatas[1]->decrementRow();
                     break;
                 case 2:
                     break;
