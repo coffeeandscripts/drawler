@@ -21,7 +21,7 @@ class Screen;
 void startCurses() {
     initscr();
     cbreak();
-    noecho();
+    echo();
     keypad(stdscr, TRUE);
     curs_set(0);
 }
@@ -31,7 +31,7 @@ void startCurses() {
 int main() {
     int ch;
     Screen scr;
-    Party * currentParty;
+    Party currentParty;
     scr.escapeCall = 0;
 
     startCurses();
@@ -47,7 +47,7 @@ int main() {
 
     while (scr.escapeCall != 1 and ch != 'q') {
         ch = getch();
-        lastKeyUpdate(&scr, ch, currentParty);
+        lastKeyUpdate(&scr, ch, &currentParty);
         if (scr.userScreen == 0) {
             scr.userScreen = 1;
         }
@@ -55,7 +55,7 @@ int main() {
     }
     endwin();
     
-    std::cout << scr.height << std::endl;
+    std::cout << currentParty.returnPartyName() << std::endl;
     std::cout << scr.windowDatas[0]->returnCurrentRow() << std::endl;
     std::cout << scr.lastKey << std::endl;
 

@@ -34,7 +34,8 @@ void lastKeyUpdate(Screen * scr, int ch, Party * currentParty) {
                 case 1:
                     switch (scr->windowDatas[1]->returnCurrentRow()) {
                         case 1:  // start new game - goes into party/character creation
-                            currentParty = partyCreation(scr);
+                            partyCreation(scr, currentParty);
+                            scr->userScreen = 2;
                             break;
                         case 2:
                             break;

@@ -29,7 +29,16 @@ class Character {
 class Party {
     public:
         void setPartyName(Screen * scr) {
-            mvwscanw(scr->windows[2], 5, 0, partyName);
+            int n = 0;
+            int ch;
+            while (ch != 10) {
+                ch = mvwgetch(scr->windows[2], 5, n);
+                partyName[n] = ch;
+                n += 1;
+            }
+        }
+        char * returnPartyName() {
+            return partyName;
         }
     protected:
         Character * firstChar;
@@ -40,6 +49,6 @@ class Party {
 // FUNCTIONS
 Party * newParty(Screen * scr);
 Character * newCharacter(Screen * scr);
-Party * partyCreation(Screen * scr);
+void partyCreation(Screen * scr, Party * newParty);
 
 #endif

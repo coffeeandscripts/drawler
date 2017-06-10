@@ -26,9 +26,7 @@ Character * newCharacter(Screen * scr) {
     return character;
 }
 
-Party * partyCreation(Screen * scr) {
-    Party newParty;
-    newParty.setPartyName(scr);
-    Party * newPartyAdd = &newParty;
-    return newPartyAdd;
+void partyCreation(Screen * scr, Party * newParty) {
+    newParty->setPartyName(scr);
+    mvwprintw(scr->windows[3], 1, 0, newParty->returnPartyName());
 }
