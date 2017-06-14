@@ -32,7 +32,7 @@ WINDOW * openSetupWindow(Screen * scr) {
     clear();
     WINDOW * win = newwin(scr->height, scr->width, 0, 0);
     static WindowData winData;
-    winData.setValues(6,0,1,0);
+    winData.setValues(6,4,2,1);
     scr->windowDatas[2] = &winData;
     return win;
 }
@@ -132,8 +132,8 @@ void updateScreen(Screen * scr) {
             wrefresh(scr->windows[2]);
             redrawwin(scr->windows[2]);
         case 3:
-            wrefresh(scr->windows[3]);
-            redrawwin(scr->windows[3]);
+            wrefresh(scr->windows[2]);
+            redrawwin(scr->windows[2]);
             break;
     }
 }

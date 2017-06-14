@@ -19,30 +19,80 @@ class Equipment {
 class Character {
     public:
         void setCharName(Screen * scr) {
-            //mvwscanw(scr->windows[2], 5, 0, charName);
+            mvwprintw(scr->windows[2], 4, 24, "Character name:");
+            updateScreen(scr);
+            int n = 0;
+            int ch;
+            while (ch != 10) {
+                ch = mvwgetch(scr->windows[2], 5, n+24);
+                if (ch != 10) {
+                    charName[n] = ch;
+                }
+                n += 1;
+                charName[n] = '\0';
+            }
+            werase(scr->windows[2]);
+            
+        }
+        char * returnCharName() {
+            return charName;
+        }
+        void setNullNext() {
+            nextChar = NULL;
+        }
+        void setNext(Character * newCharacter) {
+            nextChar = newCharacter;
+        }
+        Character * returnNextChar() {
+            return nextChar;
         }
     protected:
-        std::string charName;
+        char charName[64];
         Character * nextChar;
 };
 
 class Party {
     public:
         void setPartyName(Screen * scr) {
+            mvwprintw(scr->windows[2], 4, 0, "Party name:");
+            updateScreen(scr);
             int n = 0;
             int ch;
             while (ch != 10) {
                 ch = mvwgetch(scr->windows[2], 5, n);
-                partyName[n] = ch;
+                if (ch != 10) {
+                    partyName[n] = ch;
+                }
                 n += 1;
+                partyName[n] = '\0';
             }
+            werase(scr->windows[2]);
+            //partyNameLength = n;
         }
         char * returnPartyName() {
             return partyName;
         }
+        void addNewCharacter(Character * newCharacter) {
+            Character * firstCharacter = firstChar;
+            if (firstCharacter != NULL) {
+                while (firstCharacter->returnNextChar() != NULL) {
+                    firstCharacter = firstCharacter->returnNextChar();
+                }
+                firstCharacter->setNext(newCharacter);
+            } else {
+                firstChar = newCharacter;
+            }
+        }
+        Character * returnFirstChar() {
+            return firstChar;
+        }
+        void setCharNull() {
+            firstChar = NULL;
+        }
     protected:
         Character * firstChar;
-        char * partyName;
+        char partyName[64];
+        //int partyNameLength;
 
 };
 
@@ -50,5 +100,7 @@ class Party {
 Party * newParty(Screen * scr);
 Character * newCharacter(Screen * scr);
 void partyCreation(Screen * scr, Party * newParty);
+int lastKeyCharacters(Screen * scr, int ch, Party * newParty);
+void printPartyName(Screen * scr, Party * currentParty);
 
 #endif

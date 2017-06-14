@@ -21,6 +21,28 @@ class WindowData {
         int returnCurrentColumn() {
             return currentColumn;
         }
+        void resetRow() {
+            currentRow = 0;
+        }
+        void resetColumn() {
+            currentColumn = 0;
+        }
+        void addRow() {
+            rows += 1;
+        }
+        void removeRow() {
+            if (rows > 0) {
+                rows -= 1;
+            }
+        }
+        void addColumn() {
+            columns += 1;
+        }
+        void removeColumn() {
+            if (columns > 0) {
+                columns -= 1;
+            }
+        }
         void incrementRow() {
             if (currentRow < rows) {
                 currentRow += 1;
@@ -29,6 +51,16 @@ class WindowData {
         void decrementRow() {
             if (currentRow > 1) {
                 currentRow -= 1;
+            }
+        }
+        void incrementColumn() {
+            if (currentColumn < columns) {
+                currentColumn += 1;
+            }
+        }
+        void decrementColumn() {
+            if (currentColumn > 1) {
+                currentColumn -= 1;
             }
         }
         WindowData() {
