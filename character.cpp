@@ -69,10 +69,10 @@ void printPartyName(Screen * scr, Party * currentParty) {
 }
 
 void createNewCharacter(Screen * scr, Party * newParty) {
-    static Character newCharacter;
-    newCharacter.setNullNext();
-    newCharacter.setCharName(scr);
-    newParty->addNewCharacter(&newCharacter);
+    Character * newCharacter = new Character;
+    newCharacter->setNullNext();
+    newCharacter->setCharName(scr);
+    newParty->addNewCharacter(newCharacter);
 }
 
 int lastKeyCharacters(Screen * scr, int ch, Party * newParty) {

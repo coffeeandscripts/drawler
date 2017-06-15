@@ -73,13 +73,13 @@ class Party {
             return partyName;
         }
         void addNewCharacter(Character * newCharacter) {
-            Character * firstCharacter = firstChar;
+            Character * firstCharacter = firstChar; 
             if (firstCharacter != NULL) {
                 while (firstCharacter->returnNextChar() != NULL) {
                     firstCharacter = firstCharacter->returnNextChar();
                 }
                 firstCharacter->setNext(newCharacter);
-            } else {
+            } else if (firstCharacter == NULL) {
                 firstChar = newCharacter;
             }
         }
