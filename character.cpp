@@ -54,11 +54,23 @@ void printCharacters(Screen * scr, Party * currentParty) {
     Character * firstCharacter = currentParty->returnFirstChar();
     if (firstCharacter != NULL) {
         while (firstCharacter->returnNextChar() != NULL) {
-            mvwprintw(win, 5+n, 0, firstCharacter->returnCharName());
+            if (scr->windowDatas[2]->returnCurrentRow() == n+3) {
+                wattron(win, A_STANDOUT);
+                mvwprintw(win, 5+n, 0, firstCharacter->returnCharName());
+                wattroff(win, A_STANDOUT);
+            } else {
+                mvwprintw(win, 5+n, 0, firstCharacter->returnCharName());
+            }
             firstCharacter = firstCharacter->returnNextChar();
             n += 1;
         }
-        mvwprintw(win, 5+n, 0, firstCharacter->returnCharName());
+        if (scr->windowDatas[2]->returnCurrentRow() == n+3) {
+            wattron(win, A_STANDOUT);
+            mvwprintw(win, 5+n, 0, firstCharacter->returnCharName());
+            wattroff(win, A_STANDOUT);
+        } else {
+            mvwprintw(win, 5+n, 0, firstCharacter->returnCharName());
+        }
     }
 }
 
@@ -73,6 +85,51 @@ void createNewCharacter(Screen * scr, Party * newParty) {
     newCharacter->setNullNext();
     newCharacter->setCharName(scr);
     newParty->addNewCharacter(newCharacter);
+    scr->windowDatas[2]->addRow();
+}
+
+void deleteLastKey(Screen * scr, int ch, Party * currentParty) {
+    if (ch == 258) {
+        scr->windowDatas[2]->incrementRow();
+    } else if (ch == 259) {
+        if (scr->windowDatas[2]->returnCurrentRow() > 3) {
+            scr->windowDatas[2]->decrementRow();
+        }
+    } else if (ch == 10) {
+        int deleteCounter = scr->windowDatas[2]->returnCurrentRow() - 3;    // 0 being the first one
+        int n = 0;
+        Character * firstCharacter = currentParty->returnFirstChar();
+        Character * prevCharacter = NULL;
+        while (n != deleteCounter) {
+            prevCharacter = firstCharacter;
+            firstCharacter = firstCharacter->returnNextChar();
+            n += 1;
+        }
+        if (prevCharacter != NULL) {
+            prevCharacter->setNext(firstCharacter->returnNextChar());
+        } else {
+            currentParty->setFirstChar(firstCharacter->returnNextChar());
+        }
+        delete firstCharacter;
+        scr->windowDatas[2]->removeRow();
+        if (scr->windowDatas[2]->returnCurrentRow() > 3) {
+            scr->windowDatas[2]->decrementRow();
+        }
+        werase(scr->windows[2]);
+    }
+}
+
+void deleteCharacter(Screen * scr, Party * currentParty) {
+    int ch = 0;
+    while (ch != 'q') {
+        printPartyOptions(scr);
+        printPartyName(scr, currentParty);
+        printCharacters(scr, currentParty);
+        updateScreen(scr);
+        ch = getch();
+        deleteLastKey(scr, ch, currentParty);
+    }
+    scr->windowDatas[2]->resetRow(2);
 }
 
 int lastKeyCharacters(Screen * scr, int ch, Party * newParty) {
@@ -86,6 +143,9 @@ int lastKeyCharacters(Screen * scr, int ch, Party * newParty) {
         scr->userScreen = 1;
     } else if (ch == 10 && scr->windowDatas[2]->returnCurrentColumn() == 1) {  // new character
         createNewCharacter(scr, newParty);
+    } else if (ch == 10 && scr->windowDatas[2]->returnCurrentColumn() == 3) {  // delete character
+        scr->windowDatas[2]->resetRow(3);
+        deleteCharacter(scr, newParty);
     }
     return done;
 }

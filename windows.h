@@ -21,11 +21,11 @@ class WindowData {
         int returnCurrentColumn() {
             return currentColumn;
         }
-        void resetRow() {
-            currentRow = 0;
+        void resetRow(int num) {
+            currentRow = num;
         }
         void resetColumn() {
-            currentColumn = 0;
+            currentColumn = 1;
         }
         void addRow() {
             rows += 1;

@@ -16,6 +16,50 @@ class Equipment {
     protected:
 };
 
+class Stats {
+    public:
+    protected:
+        int hitPointsMaximum;
+        int currentHitPoints;
+        int tempHitPoints;
+        int armourClass;
+        int initiative;
+        int speed;
+        int inspiration;
+        int proficiencyBonus;
+        int strength;
+        int dexterity;
+        int consitution;
+        int intelligence;
+        int wisdom;
+        int charisma;
+        int svStrength;
+        int svDexterity;
+        int svConsitution;
+        int svIntelligence;
+        int svWisdom;
+        int svCharisma;
+        int acrobatics;
+        int animalHandling;
+        int arcana;
+        int athletics;
+        int deception;
+        int history;
+        int insight;
+        int intimidation;
+        int investigation;
+        int medicine;
+        int nature;
+        int perception;
+        int performance;
+        int persuasion;
+        int religion;
+        int sleightOfHand;
+        int stealth;
+        int survival;
+        int passiveWisdom;
+};
+
 class Character {
     public:
         void setCharName(Screen * scr) {
@@ -49,6 +93,12 @@ class Character {
     protected:
         char charName[64];
         Character * nextChar;
+        char charClass[64];
+        int charLvl;
+        char charBackground[64];
+        char charRace[64];
+        char charAlignment[64];
+        int exp;
 };
 
 class Party {
@@ -86,6 +136,9 @@ class Party {
         Character * returnFirstChar() {
             return firstChar;
         }
+        void setFirstChar(Character * charAddr) {
+            firstChar = charAddr;
+        }
         void setCharNull() {
             firstChar = NULL;
         }
@@ -102,5 +155,7 @@ Character * newCharacter(Screen * scr);
 void partyCreation(Screen * scr, Party * newParty);
 int lastKeyCharacters(Screen * scr, int ch, Party * newParty);
 void printPartyName(Screen * scr, Party * currentParty);
+void deleteCharacter(Screen * scr, Party * currentParty);
+void deleteLastKey(Screen * scr, int ch, Party * currentParty);
 
 #endif

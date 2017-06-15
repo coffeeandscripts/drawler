@@ -32,7 +32,7 @@ WINDOW * openSetupWindow(Screen * scr) {
     clear();
     WINDOW * win = newwin(scr->height, scr->width, 0, 0);
     static WindowData winData;
-    winData.setValues(6,4,2,1);
+    winData.setValues(2,4,2,1);
     scr->windowDatas[2] = &winData;
     return win;
 }

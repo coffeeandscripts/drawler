@@ -56,7 +56,7 @@ int main() {
     endwin();
     
     std::cout << currentParty.returnFirstChar()->returnNextChar()->returnCharName() << std::endl;
-    std::cout << currentParty.returnFirstChar()->returnCharName() << std::endl;
+    std::cout << scr.windowDatas[2]->returnCurrentRow() << std::endl;
     std::cout << scr.userScreen << std::endl;
     std::cout << scr.lastKey << std::endl;
 
