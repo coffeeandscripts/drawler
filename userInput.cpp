@@ -4,10 +4,12 @@
 
 #include <ncurses.h>
 #include <iostream>
+#include <fstream>
 
 #include "windows.h"
 #include "character.h"
 #include "userInput.h"
+#include "game.h"
 
 // CLASSES
 class Screen;
@@ -35,7 +37,9 @@ void lastKeyUpdate(Screen * scr, int ch, Party * currentParty) {
                     switch (scr->windowDatas[1]->returnCurrentRow()) {
                         case 1:  // start new game - goes into party/character creation
                             scr->userScreen = 2;
-                            partyCreation(scr, currentParty);                    
+                            updateScreen(scr);
+                            partyCreation(scr, currentParty);
+                            runGameLevel(scr, currentParty);
                             break;
                         case 2:
                             break;

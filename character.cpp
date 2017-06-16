@@ -5,9 +5,11 @@
 #include <ncurses.h>
 #include <iostream>
 #include <string>
+#include <fstream>
 
 #include "windows.h"
 #include "character.h"
+#include "game.h"
 
 // CLASSES
 class Party;
@@ -15,7 +17,7 @@ class Character;
 class Screen;
 
 // FUNCTIONS
-
+// print the options at the top on what you can do for the party creation
 void printPartyOptions(Screen * scr) {
     WINDOW * win = scr->windows[2];
     if (scr->windowDatas[2]->returnCurrentColumn() == 1 && scr->windowDatas[2]->returnCurrentRow() == 2) {
@@ -48,6 +50,7 @@ void printPartyOptions(Screen * scr) {
     }
 }
 
+// prints each of the character ** will add printing of stats
 void printCharacters(Screen * scr, Party * currentParty) {
     int n = 0;
     WINDOW * win = scr->windows[2];
@@ -74,12 +77,14 @@ void printCharacters(Screen * scr, Party * currentParty) {
     }
 }
 
+// prints the name of the party at the top
 void printPartyName(Screen * scr, Party * currentParty) {
     mvwprintw(scr->windows[2], 1, 0, "Party: ");
     mvwprintw(scr->windows[2], 1, 8, currentParty->returnPartyName());
     updateScreen(scr);
 }
 
+// allows for the creation of a new character
 void createNewCharacter(Screen * scr, Party * newParty) {
     Character * newCharacter = new Character;
     newCharacter->setNullNext();
@@ -88,6 +93,7 @@ void createNewCharacter(Screen * scr, Party * newParty) {
     scr->windowDatas[2]->addRow();
 }
 
+// key choice function specific to deletion of characters
 void deleteLastKey(Screen * scr, int ch, Party * currentParty) {
     if (ch == 258) {
         scr->windowDatas[2]->incrementRow();
@@ -119,6 +125,7 @@ void deleteLastKey(Screen * scr, int ch, Party * currentParty) {
     }
 }
 
+// allows for the deletion of characters
 void deleteCharacter(Screen * scr, Party * currentParty) {
     int ch = 0;
     while (ch != 'q') {
@@ -132,13 +139,14 @@ void deleteCharacter(Screen * scr, Party * currentParty) {
     scr->windowDatas[2]->resetRow(2);
 }
 
+// key choice function for majority of party setup
 int lastKeyCharacters(Screen * scr, int ch, Party * newParty) {
     int done = 0;
     if (ch == 260) {
         scr->windowDatas[2]->decrementColumn();
     } else if (ch == 261) {
         scr->windowDatas[2]->incrementColumn();
-    } else if (ch == 10 && scr->windowDatas[2]->returnCurrentColumn() == 4) {  // exit character design
+    } else if (ch == 'q') {  // exit character design
         done = 1;
         scr->userScreen = 1;
     } else if (ch == 10 && scr->windowDatas[2]->returnCurrentColumn() == 1) {  // new character
@@ -146,10 +154,16 @@ int lastKeyCharacters(Screen * scr, int ch, Party * newParty) {
     } else if (ch == 10 && scr->windowDatas[2]->returnCurrentColumn() == 3) {  // delete character
         scr->windowDatas[2]->resetRow(3);
         deleteCharacter(scr, newParty);
+    } else if (ch == 10 && scr->windowDatas[2]->returnCurrentColumn() == 4) {  // start game
+        if (newParty->returnFirstChar() != NULL) {
+            scr->userScreen = 3;
+            done = 1;
+        }
     }
     return done;
 }
 
+// MAIN party creation
 void partyCreation(Screen * scr, Party * newParty) {
     // Party name
     newParty->setCharNull();
@@ -167,5 +181,4 @@ void partyCreation(Screen * scr, Party * newParty) {
         //scr->windowDatas[2]->resetColumn();
         done = lastKeyCharacters(scr, ch, newParty);
     }
-    
 }

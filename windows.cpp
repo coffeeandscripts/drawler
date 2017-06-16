@@ -51,7 +51,9 @@ WINDOW * openMainWindow(Screen * scr) {
 WINDOW * openGameWindow(Screen * scr) {
     clear();
     WINDOW * win = newwin(scr->height, scr->width, 0, 0);
-    wprintw(win, "Game window");
+    static WindowData winData;
+    winData.setValues(6,2,1,1);
+    scr->windowDatas[1] = &winData;
     return win;
 }
 
@@ -131,9 +133,10 @@ void updateScreen(Screen * scr) {
         case 2:
             wrefresh(scr->windows[2]);
             redrawwin(scr->windows[2]);
+            break;
         case 3:
-            wrefresh(scr->windows[2]);
-            redrawwin(scr->windows[2]);
+            wrefresh(scr->windows[3]);
+            redrawwin(scr->windows[3]);
             break;
     }
 }

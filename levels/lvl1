@@ -1,0 +1,16 @@
+START Level 1
+MAP_START
+..........
+. k      .
+.        .
+.        .
+.        .
+.        .
+.        .
+.        .
+.        .
+.......1..
+MAP_END
+k "Kobolt"
+1 "You enter the dungeon" "You leave the dungeon"
+END
