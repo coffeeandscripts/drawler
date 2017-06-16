@@ -11,6 +11,18 @@ class Tile {
         void setNextTile(Tile * nextTileAddr) {
             nextTile = nextTileAddr;
         }
+        void setNextNull() {
+            nextTile = NULL;
+        }
+        void setTypeTile(int n) {
+            tileType = n;
+        }
+        Tile * returnNextTile() {
+            return nextTile;
+        }
+        int  returnTileType() {
+            return tileType;
+        }
     private:
         int tileType;
         /* 0 - new line
@@ -40,11 +52,13 @@ class Level {
         void loadLevel(/*char * lvlFileName*/Screen * scr) {
             std::ifstream is("levels/lvl1");
             is >> std::noskipws;
+            int setFirstTile = 0;
             int ch;
             char word[6400];
             int n = 0;
             int m;
             int endStream = 0;
+            Tile * tileAddr;
             while (endStream == 0) {
                 is >> word[n];
                 n += 1;
@@ -64,18 +78,64 @@ class Level {
                             m += 1;
                         }
                     }
-                } else if (cmpstr(word, (char *)"START_MAP") == 1) {
-
+                } else if (cmpstr(word, (char *)"MAP_START") == 1) {
+                    is >> word[m];
+                    n = 0;
+                    m = 0;
+                    while (cmpstr(word, (char *)"MAP_END") != 1) {
+                        is >> word[m];
+                        if (word[m] != '\n') {
+                            // add new tile
+                            Tile * newTile = new Tile;
+                            newTile->setNextNull();
+                            switch(word[m]) {
+                                case '.':
+                                    newTile->setTypeTile(1);
+                                    break;
+                                case ' ':
+                                    newTile->setTypeTile(2);
+                                    break;
+                                case 'O':
+                                    newTile->setTypeTile(3);
+                                    break;
+                                default:
+                                    newTile->setTypeTile(2);
+                                    break;
+                            }
+                            if (setFirstTile == 0) {
+                                firstTile = newTile;
+                                setFirstTile = 1;
+                            } else {
+                                tileAddr = firstTile;
+                                while (tileAddr->returnNextTile() != NULL) {
+                                    tileAddr = tileAddr->returnNextTile();
+                                }
+                                tileAddr->setNextTile(newTile);
+                            }
+                            m += 1;
+                            word[m] = '\0';
+                        } else {
+                            // add new line tile
+                            Tile * newTile = new Tile;
+                            newTile->setNextNull();
+                            newTile->setTypeTile(0);
+                            tileAddr = firstTile;
+                            while (tileAddr->returnNextTile() != NULL) {
+                                tileAddr = tileAddr->returnNextTile();
+                            }
+                            tileAddr->setNextTile(newTile);
+                            m = 0;
+                            word[m] = '\0';
+                        }
+                    }
                 } else if (cmpstr(word, (char *)"END") == 1) {
                     endStream = 1;
-             
                 }
             }
             is.close();
         }
-        void setLevelName() {
-            lvlName[0] = 'T';
-            lvlName[1] = '\0';
+        Tile * returnFirstTile() {
+            return firstTile;
         }
         char * returnLvlName() {
             return lvlName;

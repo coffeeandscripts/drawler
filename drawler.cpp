@@ -54,11 +54,11 @@ int main() {
         updateScreen(&scr);
     }
     endwin();
-    
+
     std::cout << currentParty.returnFirstChar()->returnNextChar()->returnCharName() << std::endl;
     std::cout << scr.windowDatas[2]->returnCurrentRow() << std::endl;
-    std::cout << scr.userScreen << std::endl;
-    std::cout << scr.lastKey << std::endl;
+    std::cout << scr.arbPointer << std::endl;
+    std::cout << scr.arbCounter << std::endl;
 
     return 0;
 }

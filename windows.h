@@ -91,6 +91,8 @@ class Screen {
     WINDOW * windows[5];
     WindowData * windowDatas[5];
     int lastKey;
+    int arbCounter;
+    void * arbPointer;
 };
 
 // FUNCTIONS

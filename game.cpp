@@ -56,6 +56,30 @@ Level * lvlSelect(Screen * scr) {
 void printLevel(Screen * scr, Level * lvl) {
     WINDOW * win = scr->windows[3];
     mvwprintw(win, 0, 0, lvl->returnLvlName());
+    int n = 0;
+    int m = 0;
+    Tile * tileAddr = lvl->returnFirstTile();
+    while (tileAddr != NULL) {
+        switch(tileAddr->returnTileType()) {
+            case 1:
+                mvwprintw(win, n+2, m, "#");
+                m += 1;
+                break;
+            case 2:
+                mvwprintw(win, n+2, m, " ");
+                m += 1;
+                break;
+            case 3:
+                mvwprintw(win, n+2, m, "O");
+                m += 1;
+                break;
+            case 0:
+                m = 0;
+                n += 1;
+                break;
+        }
+        tileAddr = tileAddr->returnNextTile();
+    }
 }
 
 // MAIN game running function
