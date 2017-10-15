@@ -8,8 +8,6 @@
 #include <ncurses.h>
 #include <iostream>
 
-extern int kill_switch;
-
 class Screen {
 	public:
 		void set_next(Screen * p) {
