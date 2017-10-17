@@ -8,22 +8,40 @@
 #include <ncurses.h>
 #include <iostream>
 
+#define STR_LENGTH 64
+
+class VarBuffer {
+	public:
+		int int_buffer;
+		char char_buffer[STR_LENGTH];
+		int type;
+		void set_next(VarBuffer * v) {
+			next = v;
+		}
+	private:
+		VarBuffer * next;
+};
+
 class Screen {
 	public:
-		void set_next(Screen * p) {
-			next_screen = p;
-		}
-		void set_screen(WINDOW * win, int scr_type, int xMax, int yMax, int * rep) {
+		void set_screen(WINDOW * win, int scr_type, int xMax, int yMax, int * rep, VarBuffer * v, int * k) {
 			screen = win;
 			getmaxyx(win, y, x);
 			type = scr_type;
 			cXmax = xMax;
 			cYmax = yMax;
 			rep_switch = rep;
+			var_buffer = v;
+			last_key = k;
 			cX = 0;
 			cY = 0;
 			next_screen = NULL;
 		}
+
+		void set_next_screen(Screen * scr) {
+			next_screen = scr;
+		}
+
 		void draw_border() {
 			// corners
 			mvwprintw(screen, 0, 0, "+");
@@ -54,12 +72,12 @@ class Screen {
 		}
 		void print_screen() {
 			switch(type) {
-				case 1:
+				case 1: 	// splash screen
 					draw_border();
 					mvwprintw(screen, 1, 1, "DRAWLER");
 					mvwprintw(screen, 2, 1, "Press any key...");
 					break;
-				case 2:
+				case 2: 	// main menu
 					draw_border();
 					mvwprintw(screen, 1, 1, "MAIN MENU");
 					switch(cY) {
@@ -100,11 +118,58 @@ class Screen {
 							break;
 					}
 					break;
+				case 3: 	// party load
+					break;
+				case 4: 	// campaign load
+					break;
+				case 5: 	// level screen
+					break;
+				case 6: 	// character screen
+					break;
+				case 7: 	// story screen
+					break;
+				case 8: 	// party creation/edit
+					{
+						draw_border();
+						int l_width = 6;
+						int b_height = 3;
+						if (cX == 0) {
+							print_text((char *)"PARTY", 1, 1, 1);
+						} else {
+							print_text((char *)"Party", 1, 1, 0);
+						}
+						mvwprintw(screen, 0, l_width, "+");
+						for (int n = 1; n < y - 1; n++) {
+							mvwprintw(screen, n, l_width, "|");
+						}
+						mvwprintw(screen, y - 1, l_width, "+");
+						mvwprintw(screen, y - b_height, l_width, "+");
+						for (int n = l_width + 1; n < x; n++) {
+							mvwprintw(screen, y - b_height, n, "-");
+						}
+						mvwprintw(screen, y - b_height, x - 1, "+");
+						print_text((char *)"n - new | ", 8, y-2, 0);
+						print_text((char *)"l - load | ", 18, y-2, 0);
+						print_text((char *)"e - edit", 29, y-2, 0);
+					}
+					break;
+				case 9: 	// party name window
+					wclear(screen);
+					draw_border();
+					if (cX ==0) {
+						print_text((char *)"ADD", 2, y-2, 1);
+						print_text((char *)"EXIT", 8, y-2, 0);
+					} else {
+						print_text((char *)"ADD", 2, y-2, 0);
+						print_text((char *)"EXIT", 8, y-2, 1);
+					}
+					print_text((char *)var_buffer->char_buffer, 2, 2, 0);
+					break;
 			}
 		}
 		void refresh_screen() {
-			wrefresh(screen);
 			redrawwin(screen);
+			wrefresh(screen);
 		}
 		WINDOW * return_screen() {
 			return screen;
@@ -154,24 +219,39 @@ class Screen {
 			switch(type) {
 				case 2:
 					switch(cY) {
-						case 0:
+						case 0: 	// Play
 							break;
-						case 1:
+						case 1: 	// Party
+							*rep_switch = 8;
 							break;
-						case 2:
+						case 2: 	// Editor
 							break;
-						case 3:
+						case 3: 	// Settings
 							break;
-						case 4:
+						case 4: 	// Quit
 							*rep_switch = 1;
 							break;
 					}
 					break;
+				case 9:
+					switch(cX) {
+						case 0:
+							break;
+						case 1:
+							*rep_switch = -9;
+							break;
+					}
 			}
+		}
+
+		int return_type() {
+			return type;
 		}
 	protected:
 		WINDOW * screen;
 		int * rep_switch;
+		VarBuffer * var_buffer;
+		int * last_key;
 		int type;
 		int x;
 		int y;
@@ -184,18 +264,47 @@ class Screen {
 
 class Screens {
 	public:
-		void set_rep_switch(int * n) {
+		void set_var_points(int * n, VarBuffer * v, int * k) {
 			rep_switch = n;
+			var_buffer = v;
+			last_key = k;
+		}
+		void remove_screen(int type) {
+			Screen * scr = &screens;
+			Screen * prev_scr;
+			while (scr->return_type() != type) {
+				prev_scr = scr;
+				scr = scr->next();
+			}
+			prev_scr->set_next_screen(scr->next());
+			set_current_screen(prev_scr->return_type());
 		}
 		void make_splash_screen() {
 			WINDOW * splash_scr = newwin(10, 24, 0, 0);
-			screens.set_screen(splash_scr, 1, 0, 0, rep_switch);
+			screens.set_screen(splash_scr, 1, 0, 0, rep_switch, var_buffer, last_key);
 			set_current_screen(1);
 		}
 		void make_main_screen() {
 			WINDOW * main_scr = newwin(24, 24, 0, 0);
-			screens.set_screen(main_scr, 2, 0, 4, rep_switch);
+			screens.set_screen(main_scr, 2, 0, 4, rep_switch, var_buffer, last_key);
 			set_current_screen(2);
+		}
+		void make_party_edit_create_screen() {
+			WINDOW * party_scr = newwin(20, 50, 0, 0);
+			screens.set_screen(party_scr, 8, 1, 0, rep_switch, var_buffer, last_key);
+			set_current_screen(8);
+		}
+		void attach_party_name_screen() {
+			var_buffer->char_buffer[0] = '\0';
+			WINDOW * party_name = newwin(8, 24, 4, 8);
+			static Screen scr;
+			scr.set_screen(party_name, 9, 1, 0, rep_switch, var_buffer, last_key);
+			Screen * scrs = &screens;
+			while (scrs->next() != NULL) {
+				scrs = scrs->next();
+			}
+			scrs->set_next_screen(&scr);
+			set_current_screen(9);
 		}
 		int return_current_screen() {
 			return current_screen;
@@ -218,18 +327,25 @@ class Screens {
 			refresh();
 		}
 		void move_cursor(int x, int y) {
-			// must get correct screen here
 			Screen * scr = &screens;
+			while (scr->return_type() != current_screen) {
+				scr = scr->next();
+			}
 			scr->move_cursor(x, y);
 		}
 		void press_enter() {
-			// must get correct screen here
 			Screen * scr = &screens;
+			while (scr->return_type() != current_screen) {
+				scr = scr->next();
+			}
 			scr->press_enter();
 		}
 	protected:
 		int * rep_switch;
+		VarBuffer * var_buffer;
+		int * last_key;
 		Screen screens;
+		Screen saved_screens;
 		int current_screen;
 };
 
