@@ -1,7 +1,7 @@
 # Makefile
 IDIR=include/
 LDIR=libs/
-CFLAGS=-lncurses
+CFLAGS=-lncurses -lboost_filesystem -lboost_system
 CC=g++
 
 drawler: src/*.cpp
