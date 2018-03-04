@@ -11,6 +11,13 @@ MAP_START
 .        .
 .......1..
 MAP_END
+COMMAND_START
 k "Kobolt"
-1 "You enter the dungeon" "You leave the dungeon"
+S1 "IF GAME_START PRINT You enter the dungeon ELSE PRINT You leave the dungeon"
+COMMAND_END
+STORY_START
+~1 "PRINT Your party sees a cave. Enter? (Y/N) INPUT_IF Y~2 N~3"
+~2 "PRINT The cave is dark." ~S1
+~3 "PRINT The party falls in." ~S1
+STORY_END
 END
