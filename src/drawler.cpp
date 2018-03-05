@@ -10,6 +10,6 @@
 int main() {
 	Engine game_engine;
 	game_engine.start_engine();
-	std::cout << game_engine.get_x_dim() << '\n';
+	game_engine.run_game();
 	return 0;
 }

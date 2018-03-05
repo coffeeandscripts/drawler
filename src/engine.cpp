@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "engine.h"
+#include "screen.h"
 
 #define TRUE 1
 #define FALSE 0
@@ -35,4 +36,20 @@ int Engine::get_y_dim() {
 
 int Engine::get_x_dim() {
 	return scr_x;
+}
+
+void Engine::get_key() {
+	key = getch();
+}
+
+void Engine::set_scrs(Screens * tmp_scrs) {
+	scrs = tmp_scrs;
+}
+
+void Engine::run_game() {
+	scrs = create_screens();
+	while (key != 'q') {
+		get_key();
+		refresh(); 	// move to screens class later
+	}
 }
